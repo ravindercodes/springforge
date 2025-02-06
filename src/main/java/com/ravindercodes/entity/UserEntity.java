@@ -25,12 +25,12 @@ public class UserEntity extends DateEntity {
     private Long id;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(max = 60)
     @Column(unique = true, nullable = false)
     private String username;
 
     @NotBlank
-    @Size(max = 30)
+    @Size(max = 60)
     @Column(unique = true, nullable = false)
     private String email;
 
