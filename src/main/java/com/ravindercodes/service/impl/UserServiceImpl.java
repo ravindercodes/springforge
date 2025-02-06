@@ -71,14 +71,7 @@ public class UserServiceImpl implements UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-
-        String jwtToken = null;
-        try {
-            jwtToken = jwtUtils.generateToken((userDetails.getUsername()));
-        } catch (Exception e) {
-            log.error("JWT generation failed for user: {}", String.valueOf(e));
-            throw new JwtGenerationEx(MessagesConstants.JWT_GENERATION_EX, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        String jwtToken = jwtUtils.generateToken((userDetails.getUsername()));
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
