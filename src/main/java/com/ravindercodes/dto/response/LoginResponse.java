@@ -17,12 +17,12 @@ public class LoginResponse {
     private String email;
     private List<String> roles;
     private String type = "Bearer";
-    private String token;
+    private String accessToken;
 
-    public LoginResponse(String username, String email, List<String> roles, String token) {
+    public LoginResponse(String username, String email, List<String> roles, String accessToken) {
         this.username = username;
         this.email = email;
         this.roles = roles;
-        this.token = token;
+        this.accessToken = accessToken;
     }
 }

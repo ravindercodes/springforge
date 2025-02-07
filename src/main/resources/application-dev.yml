@@ -2,6 +2,10 @@
 server:
   port: 8080
 
+# Base URL
+base:
+  url: http://localhost:8080/
+
 spring:
   # Devtools configurations
   devtools:
@@ -31,17 +35,35 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+  # Email configurations
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username: aecc305723ab8c
+    password: 1e3354b3ba716d
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
+# "From" email configuration
+mail:
+  from: springforge@test.com
 
 # JWT configurations
 jwt:
-  expiration:
-    ms: 12000000
+  accessTokenExpireMs: 12000000  # JWT Access Token Expiration Time (in milliseconds)
+  emailTokenExpireMs: 120000  # Email Verification Token Expiration Time (in milliseconds)
+
 
 # jasypt configurations
 jasypt:
   encryptor:
     password: "ravindercodes"
+
+
 
 
 

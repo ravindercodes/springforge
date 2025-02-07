@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Email Verification</title>
+</head>
+<body>
+<h1 th:text="'Hello, ' + ${username} + '!'"></h1>
+<p>
+    <a th:href="@{${verificationToken}}">
+        Click here to verify your email
+    </a>
+</p>
+<p>Best regards, <br> Springforge</p>
+</body>
+</html>

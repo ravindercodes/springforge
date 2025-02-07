@@ -11,5 +11,7 @@ public interface UserService {
     public ResponseEntity<?> registerUser(SignupRequest signUpRequest);
 
     public ResponseEntity<?> validateToken(String token);
+
+    public ResponseEntity<?> emailVerification(String verificationToken);
     
 }

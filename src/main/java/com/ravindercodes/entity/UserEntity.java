@@ -38,11 +38,15 @@ public class UserEntity extends DateEntity {
     @Size(max = 120)
     private String password;
 
+    @Lob
+    @Column
+    private String verificationToken;
+
     @Column(nullable = false)
     private boolean deleted = false;
 
     @Column(nullable = false)
-    private boolean isEnabled = true;
+    private boolean isEnabled = false;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",

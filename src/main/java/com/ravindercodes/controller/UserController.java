@@ -34,4 +34,9 @@ public class UserController {
     public ResponseEntity<?> validateToken(@RequestParam @NotBlank(message = "Token is required") String token) {
         return this.userService.validateToken(token);
     }
+
+    @GetMapping("/email-verification")
+    public ResponseEntity<?> emailVerification(@RequestParam @NotBlank(message = "Verification Token is required") String verificationToken) {
+        return this.userService.emailVerification(verificationToken);
+    }
 }

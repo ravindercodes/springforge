@@ -2,6 +2,10 @@
 server:
   port: 8080
 
+# Base URL
+base:
+  url: http://localhost:8080/
+
 spring:
   # Devtools configurations
   devtools:
@@ -30,8 +34,8 @@ spring:
 
 # JWT configurations
 jwt:
-  expiration:
-    ms: 12000000
+  accessTokenExpireMs: 12000000  # JWT Access Token Expiration Time (in milliseconds)
+  emailTokenExpireMs: 120000  # Email Verification Token Expiration Time (in milliseconds)
 
 # jasypt configurations
 jasypt:

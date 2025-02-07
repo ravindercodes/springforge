@@ -165,4 +165,49 @@ public class GlobalExceptionHandler {
                         request.getDescription(false).replace("uri=", "")
                 ));
     }
+
+    @ExceptionHandler(EmailSendFailedEx.class)
+    public ResponseEntity<ErrorResponse> EeailSendingEx(EmailSendFailedEx ex, WebRequest request) {
+        log.error("Email sending failed: {}", ex.getMessage());
+        HttpStatus status = ex.getStatus();
+        return ResponseEntity.status(status.value())
+                .body(new ErrorResponse(
+                        Instant.now().getEpochSecond(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        ex.getClass().getName(),
+                        ex.getMessage(),
+                        request.getDescription(false).replace("uri=", "")
+                ));
+    }
+
+    @ExceptionHandler(EmailVerificationFailedEx.class)
+    public ResponseEntity<ErrorResponse> emailVerificationEx(EmailVerificationFailedEx ex, WebRequest request) {
+        log.error("Email verification failed: {}", ex.getMessage());
+        HttpStatus status = ex.getStatus();
+        return ResponseEntity.status(status.value())
+                .body(new ErrorResponse(
+                        Instant.now().getEpochSecond(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        ex.getClass().getName(),
+                        ex.getMessage(),
+                        request.getDescription(false).replace("uri=", "")
+                ));
+    }
+
+    @ExceptionHandler(UserDisabledEx.class)
+    public ResponseEntity<ErrorResponse> userDisabledEx(UserDisabledEx ex, WebRequest request) {
+        log.error("User disabled : {}", ex.getMessage());
+        HttpStatus status = ex.getStatus();
+        return ResponseEntity.status(status.value())
+                .body(new ErrorResponse(
+                        Instant.now().getEpochSecond(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        ex.getClass().getName(),
+                        ex.getMessage(),
+                        request.getDescription(false).replace("uri=", "")
+                ));
+    }
 }

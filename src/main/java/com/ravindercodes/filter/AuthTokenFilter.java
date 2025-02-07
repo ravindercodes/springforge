@@ -4,7 +4,7 @@ import com.ravindercodes.constant.SecurityConstants;
 import com.ravindercodes.exception.custom.UnAuthorizedEx;
 import com.ravindercodes.exception.response.ErrorResponse;
 import com.ravindercodes.security.serviceimpl.UserDetailsServiceImpl;
-import com.ravindercodes.util.JwtUtils;
+import com.ravindercodes.util.JwtUtility;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtUtility jwtUtility;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -52,8 +52,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 throw new UnAuthorizedEx("Token is missing", HttpStatus.UNAUTHORIZED);
             }
 
-            if (jwtUtils.isValidToken(jwt)) {
-                String username = jwtUtils.getUserNameFromJwtToken(jwt);
+            if (jwtUtility.isValidToken(jwt)) {
+                String username = jwtUtility.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authentication =

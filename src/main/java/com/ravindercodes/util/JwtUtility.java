@@ -28,10 +28,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class JwtUtils {
+public class JwtUtility {
 
-    @Value("${jwt.expiration.ms}")
-    private int jwtExpirationMs;
+    @Value("${jwt.accessTokenExpireMs}")
+    private int accessTokenExpireMs;
+
+    @Value("${jwt.emailTokenExpireMs}")
+    private int emailTokenExpireMs;
 
     private final String PUBLIC_KEY_PATH = CommonConstants.PUBLIC_KEY_PATH;
     private final String PRIVATE_KEY_PATH = CommonConstants.PRIVATE_KEY_PATH;
@@ -77,12 +80,21 @@ public class JwtUtils {
         }
     }
 
-    public String generateToken(String subject) {
+    public String accessToken(String subject){
+        return this.generateToken(subject, new Date(System.currentTimeMillis() + accessTokenExpireMs));
+    }
+
+
+    public String emailVerificationToken(String subject){
+        return this.generateToken(subject, new Date(System.currentTimeMillis() + emailTokenExpireMs));
+    }
+
+    public String generateToken(String subject, Date date) {
         try {
             return Jwts.builder()
                     .setSubject(subject)
                     .setIssuedAt(new Date())
-                    .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
+                    .setExpiration(date)
                     .signWith(SignatureAlgorithm.RS256, getPrivateKey())
                     .compact();
         } catch (Exception e) {
