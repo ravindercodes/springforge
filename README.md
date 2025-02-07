@@ -79,6 +79,17 @@ mvn jasypt:decrypt-value -Djasypt.encryptor.password="springforge" -Djasypt.plug
   password for decryption.
 - **-Djasypt.plugin.value="encryptor value"**: The encrypted value that you want to decrypt.
 
+### Disable Devtools in Production
+Ensure Devtools is only active in development by adding this in `application.properties` or `application.yml`:
+```
+spring:
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+```
+
 ### **Build project command**
 
 ```bash
