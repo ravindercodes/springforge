@@ -2,8 +2,14 @@
 server:
   port: 8080
 
-# H2 database configurations
 spring:
+  # Devtools configurations
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: true
+  # H2 database configurations
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -25,6 +31,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+
 
 # JWT configurations
 jwt:

@@ -2,8 +2,14 @@
 server:
   port: 8080
 
-# H2 database configurations
 spring:
+  # Devtools configurations
+  devtools:
+    restart:
+      enabled: false
+    livereload:
+      enabled: false
+  # H2 database configurations
   h2:
     console:
       enabled: true
