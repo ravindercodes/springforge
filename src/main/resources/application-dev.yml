@@ -1,5 +1,6 @@
-# Server running port
+# Server name and running port
 server:
+  name: SpringForge
   port: 8080
 
 # Base URL
