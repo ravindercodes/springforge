@@ -20,8 +20,8 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private String verificationToken;
     private boolean deleted;
-    @JsonIgnore
     private boolean isEnabled;
     private Collection<? extends GrantedAuthority> authorities;
 
@@ -35,6 +35,7 @@ public class UserDetailsImpl implements UserDetails {
                 userEntity.getUsername(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
+                userEntity.getVerificationToken(),
                 userEntity.isDeleted(),
                 userEntity.isEnabled(),
                 authorities);

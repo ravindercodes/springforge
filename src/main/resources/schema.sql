@@ -3,6 +3,7 @@ CREATE TABLE users (
     username VARCHAR(20) NOT NULL UNIQUE,
     email VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(120) NOT NULL,
+    verification_token TEXT,
     deleted BOOLEAN NOT NULL DEFAULT false,
     is_enabled BOOLEAN NOT NULL DEFAULT true,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
