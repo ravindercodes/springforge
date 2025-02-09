@@ -80,7 +80,9 @@ mvn jasypt:decrypt-value -Djasypt.encryptor.password="springforge" -Djasypt.plug
 - **-Djasypt.plugin.value="encryptor value"**: The encrypted value that you want to decrypt.
 
 ### Disable Devtools in Production
+
 Ensure Devtools is only active in development by adding this in `application.properties` or `application.yml`:
+
 ```
 spring:
   devtools:
@@ -95,7 +97,9 @@ spring:
 ```bash
 mvn clean install -Dspring.profiles.active=<environment> -Djasypt.encryptor.password=<password>
 ```
-**Replace** <environment> with the desired Spring profile (**e.g.**, ```dev```, ```uat```, ```prod```) and <password> with the Jasypt encryption password.
+
+**Replace** <environment> with the desired Spring profile (**e.g.**, ```dev```, ```uat```, ```prod```) and <password>
+with the Jasypt encryption password.
 
 The application will start on `http://localhost:8080`.
 

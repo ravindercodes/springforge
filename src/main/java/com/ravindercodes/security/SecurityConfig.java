@@ -22,6 +22,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    private static final String[] AUTH_WHITELIST = SecurityConstants.AUTH_WHITELIST.toArray(new String[0]);
     @Autowired
     UserDetailsServiceImpl userDetailsService;
 
@@ -29,8 +30,6 @@ public class SecurityConfig {
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter();
     }
-
-    private static final String[] AUTH_WHITELIST = SecurityConstants.AUTH_WHITELIST.toArray(new String[0]);
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

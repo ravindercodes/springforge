@@ -4,7 +4,6 @@ import com.ravindercodes.constant.CommonConstants;
 import com.ravindercodes.constant.MessagesConstants;
 import com.ravindercodes.exception.custom.JwtGenerationEx;
 import io.jsonwebtoken.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
@@ -77,12 +76,12 @@ public class JwtUtility {
         }
     }
 
-    public String accessToken(String subject){
+    public String accessToken(String subject) {
         return this.generateToken(subject, new Date(System.currentTimeMillis() + accessTokenExpireMs));
     }
 
 
-    public String emailVerificationToken(String subject){
+    public String emailVerificationToken(String subject) {
         return this.generateToken(subject, new Date(System.currentTimeMillis() + emailTokenExpireMs));
     }
 

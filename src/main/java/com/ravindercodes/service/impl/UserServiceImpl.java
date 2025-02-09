@@ -4,8 +4,8 @@ import com.ravindercodes.constant.MessagesConstants;
 import com.ravindercodes.dto.model.EmailVerificationTokenModel;
 import com.ravindercodes.dto.request.LoginRequest;
 import com.ravindercodes.dto.request.SignupRequest;
-import com.ravindercodes.dto.response.SuccessResponse;
 import com.ravindercodes.dto.response.LoginResponse;
+import com.ravindercodes.dto.response.SuccessResponse;
 import com.ravindercodes.entity.RoleEntity;
 import com.ravindercodes.entity.UserEntity;
 import com.ravindercodes.exception.custom.EmailExitEx;
@@ -131,7 +131,7 @@ public class UserServiceImpl implements UserService {
         }
         String username = this.jwtUtility.getUserNameFromJwtToken(verificationToken);
         UserEntity userEntity = this.userRepository.findByUsername(username);
-        if(userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != verificationToken){
+        if (userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != verificationToken) {
             throw new EmailVerificationFailedEx(MessagesConstants.EMAIL_VERIFICATION_FAILED, HttpStatus.BAD_REQUEST);
         }
         userEntity.setEnabled(true);

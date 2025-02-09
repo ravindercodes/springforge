@@ -13,5 +13,5 @@ public interface UserService {
     public ResponseEntity<?> validateToken(String token);
 
     public ResponseEntity<?> emailVerification(String verificationToken);
-    
+
 }
