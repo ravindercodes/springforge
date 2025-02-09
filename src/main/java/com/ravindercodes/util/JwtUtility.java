@@ -36,9 +36,6 @@ public class JwtUtility {
     @Value("${jwt.emailTokenExpireMs}")
     private int emailTokenExpireMs;
 
-    private final String PUBLIC_KEY_PATH = CommonConstants.PUBLIC_KEY_PATH;
-    private final String PRIVATE_KEY_PATH = CommonConstants.PRIVATE_KEY_PATH;
-
     private PublicKey cachedPublicKey = null;
     private PrivateKey cachedPrivateKey = null;
 
@@ -46,7 +43,7 @@ public class JwtUtility {
         if (cachedPrivateKey != null) {
             return cachedPrivateKey;
         }
-        String key = readKeyFromFile(PRIVATE_KEY_PATH);
+        String key = readKeyFromFile(CommonConstants.PRIVATE_KEY_PATH);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
         KeyFactory kf = KeyFactory.getInstance("RSA");
         this.cachedPrivateKey = kf.generatePrivate(spec);
@@ -57,7 +54,7 @@ public class JwtUtility {
         if (cachedPublicKey != null) {
             return cachedPublicKey;
         }
-        String key = readKeyFromFile("keys/public_key.pem");
+        String key = readKeyFromFile(CommonConstants.PUBLIC_KEY_PATH);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder().decode(key));
         KeyFactory kf = KeyFactory.getInstance("RSA");
         this.cachedPublicKey = kf.generatePublic(spec);
