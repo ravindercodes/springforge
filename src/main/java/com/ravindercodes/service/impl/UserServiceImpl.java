@@ -14,9 +14,12 @@ import com.ravindercodes.exception.custom.*;
 import com.ravindercodes.repository.RoleRepository;
 import com.ravindercodes.repository.UserRepository;
 import com.ravindercodes.security.serviceimpl.UserDetailsImpl;
+import com.ravindercodes.service.LoginAttemptService;
 import com.ravindercodes.service.UserService;
 import com.ravindercodes.util.EmailUtility;
+import com.ravindercodes.util.IpAddressUtility;
 import com.ravindercodes.util.JwtUtility;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -60,7 +63,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final ModelMapper modelMapper;
 
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper) {
+    @Autowired
+    private final LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private final HttpServletRequest request;
+
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper, LoginAttemptService loginAttemptService, HttpServletRequest request) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -68,10 +77,18 @@ public class UserServiceImpl implements UserService {
         this.jwtUtility = jwtUtility;
         this.emailUtility = emailUtility;
         this.modelMapper = modelMapper;
+        this.loginAttemptService = loginAttemptService;
+        this.request = request;
     }
 
     @Override
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+        String ipAddress = IpAddressUtility.getClientIp(request);
+        if (loginAttemptService.isIpBlocked(ipAddress)) {
+            long ipUnlockTime = loginAttemptService.getIpUnlockTime(ipAddress);
+            throw new IpAddressBlockedEx(String.format(MessagesConstants.IP_ADDRESS_BLOCKED, ipUnlockTime), HttpStatus.FORBIDDEN);
+        }
+
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsernameOrEmail(), loginRequest.getPassword()));
 

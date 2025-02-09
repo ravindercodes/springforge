@@ -25,6 +25,8 @@ public class MessagesConstants {
     public static final String USER_NOT_FOUND = "User not found : {}";
     public static final String INVALID_RESET_TOKEN = "Invalid or expired reset token. Please request a new password reset link.";
     public static final String INVALID_TOKEN = "Invalid or expired token. Please request a new one: {}";
+    public static final String RECORD_NOT_FOUND = "Record not found: {}";
+    public static final String IP_ADDRESS_BLOCKED = "IP address blocked. Please try after %d minutes.";
 
     /**
      * Email subject
