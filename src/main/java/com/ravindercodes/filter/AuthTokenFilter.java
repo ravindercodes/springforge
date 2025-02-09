@@ -1,5 +1,6 @@
 package com.ravindercodes.filter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ravindercodes.constant.SecurityConstants;
 import com.ravindercodes.exception.custom.UnAuthorizedEx;
 import com.ravindercodes.exception.response.ErrorResponse;
@@ -18,7 +19,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 

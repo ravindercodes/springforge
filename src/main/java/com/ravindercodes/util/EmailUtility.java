@@ -3,6 +3,7 @@ package com.ravindercodes.util;
 import com.ravindercodes.constant.TemplateConstant;
 import com.ravindercodes.dto.model.EmailVerificationTokenModel;
 import com.ravindercodes.exception.custom.EmailSendFailedEx;
+import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +13,6 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
-import jakarta.mail.MessagingException;
 
 @Component
 public class EmailUtility {

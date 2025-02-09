@@ -27,6 +27,6 @@ public class MessagesConstants {
      * Email subject
      */
     public static final String SUBJECT_VERFIFICATION_EMAIL = "Springforge email verification";
-    
+
 
 }

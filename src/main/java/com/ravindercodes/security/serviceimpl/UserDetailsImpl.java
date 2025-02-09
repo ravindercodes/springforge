@@ -1,6 +1,5 @@
 package com.ravindercodes.security.serviceimpl;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ravindercodes.entity.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
