@@ -11,7 +11,8 @@ public class MessagesConstants {
     public static final String RECORD_SAVED = "Record saved successfully!";
     public static final String EMAIL_VERIFIED_SUCCESSFULLY = "Email verified successfully!";
     public static final String USER_DISABLED_VERIFICATION_EMAIL_SENT = "Your account has been disabled. A verification email has been sent to your registered email address.";
-
+    public static final String RESET_PASSWORD_EMAIL_SENT = "Password reset link sent to your email.";
+    public static final String RESET_PASSWORD_SUCCESSFULLY = "Your password has been reset successfully.";
 
     /**
      * In below constant is used for exception message
@@ -22,11 +23,14 @@ public class MessagesConstants {
     public static final String ROLE_NOT_FOUND = "Role not found with ID: {}";
     public static final String EMAIL_VERIFICATION_FAILED = "Email verification failed: {}";
     public static final String USER_NOT_FOUND = "User not found : {}";
+    public static final String INVALID_RESET_TOKEN = "Invalid or expired reset token. Please request a new password reset link.";
+    public static final String INVALID_TOKEN = "Invalid or expired token. Please request a new one: {}";
 
     /**
      * Email subject
      */
     public static final String SUBJECT_VERFIFICATION_EMAIL = "Springforge email verification";
+    public static final String SUBJECT_RESET_PASSWORD = "Springforge reset password";
 
 
 }
