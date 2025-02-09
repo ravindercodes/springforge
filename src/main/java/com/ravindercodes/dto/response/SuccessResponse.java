@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SuccessResponse<T> {
-    private String status;
+    private int status;
     private String message;
     private T data;
 
     public static <T> SuccessResponse<T> success(String message, T data) {
-        return new SuccessResponse<>("success", message, data);
+        return new SuccessResponse<>(200, message, data);
     }
 }
