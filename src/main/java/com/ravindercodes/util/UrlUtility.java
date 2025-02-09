@@ -7,17 +7,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class UrlUtility {
 
-    private static String BASE_URL;
-    @Value("${base.url}")
-    private String baseUrl;
+    private static String backendUrl;
+    private static String frontendUrl;
 
-    public static String getVerificationUrl(String token) {
-        return BASE_URL + "api/auth/email-verification?verificationToken=" + token;
+    @Value("${base.backend.url}")
+    private String baseBackendUrl;
+
+    @Value("${base.frontend.url}")
+    private String baseFrontendUrl;
+
+    public static String getVerificationUrl(String verificationToken) {
+        return backendUrl + "api/auth/email-verification?verificationToken=" + verificationToken;
+    }
+
+    public static String getResetPasswordUrl(String verificationToken) {
+        return frontendUrl + "api/auth/reset-password?verificationToken=" + verificationToken;
+        //return frontendUrl + "reset-password?token=" + token;
     }
 
     @PostConstruct
     private void init() {
-        BASE_URL = baseUrl;
+        backendUrl = baseBackendUrl;
+        frontendUrl = baseFrontendUrl;
     }
 }
+
 

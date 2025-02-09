@@ -2,16 +2,15 @@ package com.ravindercodes.service.impl;
 
 import com.ravindercodes.constant.MessagesConstants;
 import com.ravindercodes.dto.model.EmailVerificationTokenModel;
+import com.ravindercodes.dto.model.ResetPasswordEmailModel;
 import com.ravindercodes.dto.request.LoginRequest;
+import com.ravindercodes.dto.request.ResetPasswordRequest;
 import com.ravindercodes.dto.request.SignupRequest;
 import com.ravindercodes.dto.response.LoginResponse;
 import com.ravindercodes.dto.response.SuccessResponse;
 import com.ravindercodes.entity.RoleEntity;
 import com.ravindercodes.entity.UserEntity;
-import com.ravindercodes.exception.custom.EmailExitEx;
-import com.ravindercodes.exception.custom.EmailVerificationFailedEx;
-import com.ravindercodes.exception.custom.ResourceNotFoundEx;
-import com.ravindercodes.exception.custom.UsernameExitEx;
+import com.ravindercodes.exception.custom.*;
 import com.ravindercodes.repository.RoleRepository;
 import com.ravindercodes.repository.UserRepository;
 import com.ravindercodes.security.serviceimpl.UserDetailsImpl;
@@ -127,7 +126,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<?> emailVerification(String verificationToken) {
         Map<String, Object> tokenValidation = this.jwtUtility.validateToken(verificationToken);
         if (!(boolean) tokenValidation.get("valid")) {
-            return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.TOKEN_VALIDATE_SUCCESSFULLY, tokenValidation));
+            return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
         }
         String username = this.jwtUtility.getUserNameFromJwtToken(verificationToken);
         UserEntity userEntity = this.userRepository.findByUsername(username);
@@ -137,5 +136,55 @@ public class UserServiceImpl implements UserService {
         userEntity.setEnabled(true);
         this.userRepository.save(userEntity);
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.EMAIL_VERIFIED_SUCCESSFULLY, null));
+    }
+
+    @Override
+    public ResponseEntity<?> forgetPassword(String email) {
+        UserEntity userEntity = this.userRepository.findByEmail(email);
+        if (userEntity == null) {
+            throw new UserNotFoundEx(MessagesConstants.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
+        }
+        String verificationToken = this.jwtUtility.emailVerificationToken(userEntity.getUsername());
+        userEntity.setVerificationToken(verificationToken);
+        this.userRepository.save(userEntity);
+        emailUtility.resetPassword(
+                ResetPasswordEmailModel.builder()
+                        .toEmail(userEntity.getEmail())
+                        .username(userEntity.getUsername())
+                        .subject(MessagesConstants.SUBJECT_RESET_PASSWORD)
+                        .verificationToken(verificationToken)
+                        .build()
+        );
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RESET_PASSWORD_EMAIL_SENT, null));
+    }
+
+    @Override
+    public ResponseEntity<?> resetPassword(String verificationToken) {
+        Map<String, Object> tokenValidation = this.jwtUtility.validateToken(verificationToken);
+        if (!(boolean) tokenValidation.get("valid")) {
+            return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
+        }
+        String username = this.jwtUtility.getUserNameFromJwtToken(verificationToken);
+        UserEntity userEntity = this.userRepository.findByUsername(username);
+        if (userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != verificationToken) {
+            throw new ResetPasswordFailedEx(MessagesConstants.INVALID_RESET_TOKEN, HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.TOKEN_VALIDATE_SUCCESSFULLY, tokenValidation));
+    }
+
+    @Override
+    public ResponseEntity<?> resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        Map<String, Object> tokenValidation = this.jwtUtility.validateToken(resetPasswordRequest.getVerificationToken());
+        if (!(boolean) tokenValidation.get("valid")) {
+            return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
+        }
+        String username = this.jwtUtility.getUserNameFromJwtToken(resetPasswordRequest.getVerificationToken());
+        UserEntity userEntity = this.userRepository.findByUsername(username);
+        if (userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != resetPasswordRequest.getVerificationToken()) {
+            throw new ResetPasswordFailedEx(MessagesConstants.INVALID_RESET_TOKEN, HttpStatus.BAD_REQUEST);
+        }
+        userEntity.setPassword(encoder.encode(resetPasswordRequest.getPassword()));
+        this.userRepository.save(userEntity);
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RESET_PASSWORD_SUCCESSFULLY, null));
     }
 }

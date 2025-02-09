@@ -2,6 +2,7 @@ package com.ravindercodes.util;
 
 import com.ravindercodes.constant.TemplateConstant;
 import com.ravindercodes.dto.model.EmailVerificationTokenModel;
+import com.ravindercodes.dto.model.ResetPasswordEmailModel;
 import com.ravindercodes.exception.custom.EmailSendFailedEx;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -57,6 +58,33 @@ public class EmailUtility {
         } catch (MessagingException e) {
             isEmailSent = false;
             throw new EmailSendFailedEx("Failed to send OTP email to " + emailVerificationTokenModel.getToEmail(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return isEmailSent;
+    }
+
+    public boolean resetPassword(ResetPasswordEmailModel resetPasswordEmailModel) {
+
+        boolean isEmailSent = false;
+
+        try {
+            MimeMessageHelper helper = createEmailHelper();
+
+            helper.setFrom(fromEmail);
+            helper.setTo(resetPasswordEmailModel.getToEmail());
+
+            helper.setSubject(resetPasswordEmailModel.getSubject());
+
+            Context context = new Context();
+            context.setVariable("username", resetPasswordEmailModel.getUsername());
+            context.setVariable("resetPasswordLink", UrlUtility.getResetPasswordUrl(resetPasswordEmailModel.getVerificationToken()));
+            String htmlContent = templateEngine.process(TemplateConstant.RESET_PASSWORD, context);
+
+            helper.setText(htmlContent, true);
+            mailSender.send(helper.getMimeMessage());
+            isEmailSent = true;
+        } catch (MessagingException e) {
+            isEmailSent = false;
+            throw new EmailSendFailedEx("Failed to send password reset email to " + resetPasswordEmailModel.getToEmail(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return isEmailSent;
     }
