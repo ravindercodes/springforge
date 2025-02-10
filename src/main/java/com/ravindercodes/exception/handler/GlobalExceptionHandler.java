@@ -210,4 +210,19 @@ public class GlobalExceptionHandler {
                         request.getDescription(false).replace("uri=", "")
                 ));
     }
+
+    @ExceptionHandler(IpAddressBlockedEx.class)
+    public ResponseEntity<ErrorResponse> ipAddressBlockedEx(IpAddressBlockedEx ex, WebRequest request) {
+        log.error("IP address block: {}", ex.getMessage());
+        HttpStatus status = ex.getStatus();
+        return ResponseEntity.status(status.value())
+                .body(new ErrorResponse(
+                        Instant.now().getEpochSecond(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        ex.getClass().getName(),
+                        ex.getMessage(),
+                        request.getDescription(false).replace("uri=", "")
+                ));
+    }
 }
