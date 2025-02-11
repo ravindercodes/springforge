@@ -59,8 +59,9 @@ mail:
 
 # JWT configurations
 jwt:
-  accessTokenExpireMs: 12000000  # JWT Access Token Expiration Time (in milliseconds)
-  emailTokenExpireMs: 120000  # Email Verification Token Expiration Time (in milliseconds)
+  accessTokenExpireMs: 12000000
+  emailTokenExpireMs: 120000
+  refreshTokenExpireMs: 604800000
 
 
 # jasypt configurations

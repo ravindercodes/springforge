@@ -4,18 +4,23 @@ import com.ravindercodes.constant.MessagesConstants;
 import com.ravindercodes.dto.model.EmailVerificationTokenModel;
 import com.ravindercodes.dto.model.ResetPasswordEmailModel;
 import com.ravindercodes.dto.request.LoginRequest;
+import com.ravindercodes.dto.request.RefreshTokenRequest;
 import com.ravindercodes.dto.request.ResetPasswordRequest;
 import com.ravindercodes.dto.request.SignupRequest;
 import com.ravindercodes.dto.response.LoginResponse;
+import com.ravindercodes.dto.response.RefreshTokenResponse;
 import com.ravindercodes.dto.response.SuccessResponse;
 import com.ravindercodes.entity.RoleEntity;
 import com.ravindercodes.entity.UserEntity;
+import com.ravindercodes.entity.UserSessionEntity;
 import com.ravindercodes.exception.custom.*;
 import com.ravindercodes.repository.RoleRepository;
 import com.ravindercodes.repository.UserRepository;
+import com.ravindercodes.repository.UserSessionRepository;
 import com.ravindercodes.security.serviceimpl.UserDetailsImpl;
 import com.ravindercodes.service.LoginAttemptService;
 import com.ravindercodes.service.UserService;
+import com.ravindercodes.util.DeviceUtility;
 import com.ravindercodes.util.EmailUtility;
 import com.ravindercodes.util.IpAddressUtility;
 import com.ravindercodes.util.JwtUtility;
@@ -69,7 +74,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final HttpServletRequest request;
 
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper, LoginAttemptService loginAttemptService, HttpServletRequest request) {
+    @Autowired
+    private final UserSessionRepository userSessionRepository;
+
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper, LoginAttemptService loginAttemptService, HttpServletRequest request, UserSessionRepository userSessionRepository) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -79,6 +87,7 @@ public class UserServiceImpl implements UserService {
         this.modelMapper = modelMapper;
         this.loginAttemptService = loginAttemptService;
         this.request = request;
+        this.userSessionRepository = userSessionRepository;
     }
 
     @Override
@@ -94,11 +103,19 @@ public class UserServiceImpl implements UserService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        String jwtToken = jwtUtility.accessToken((userDetails.getUsername()));
+        String accessToken = jwtUtility.accessToken((userDetails.getUsername()));
         List<String> roles = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-        LoginResponse loginResponse = new LoginResponse(userDetails.getUsername(), userDetails.getEmail(), roles, jwtToken);
+
+        UserEntity user = this.userRepository.findByUsername(userDetails.getUsername());
+
+        String refreshToken = this.jwtUtility.refreshToken(user.getUsername());
+        String deviceId = DeviceUtility.generateDeviceId();
+
+        UserSessionEntity userSessionEntity = new UserSessionEntity(user, deviceId, DeviceUtility.getDeviceName(), IpAddressUtility.getClientIp(request), refreshToken, true);
+        this.userSessionRepository.save(userSessionEntity);
+        LoginResponse loginResponse = new LoginResponse(userDetails.getUsername(), userDetails.getEmail(), deviceId, roles, accessToken, refreshToken);
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.LOGIN_SUCCESSFULLY, loginResponse));
     }
 
@@ -203,5 +220,25 @@ public class UserServiceImpl implements UserService {
         userEntity.setPassword(encoder.encode(resetPasswordRequest.getPassword()));
         this.userRepository.save(userEntity);
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RESET_PASSWORD_SUCCESSFULLY, null));
+    }
+
+    @Override
+    public ResponseEntity<?> getRefreshToken(RefreshTokenRequest refreshTokenRequest) {
+        UserSessionEntity userSessionEntity = this.userSessionRepository.findByDeviceId(refreshTokenRequest.getDeviceId()).orElseThrow(() -> new RuntimeException("Session not found"));
+        Map<String, Object> tokenValidation = this.jwtUtility.validateToken(refreshTokenRequest.getRefreshToken());
+        if (!(boolean) tokenValidation.get("valid")) {
+            return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
+        }
+        String deviceName = DeviceUtility.getDeviceName();
+        if (!userSessionEntity.getRefreshToken().equals(refreshTokenRequest.getRefreshToken()) && !deviceName.equals(userSessionEntity.getDeviceName())) {
+            throw new RefreshTokenGeneratedFailedEx(MessagesConstants.REFRESH_TOKEN_GENERATED_FAILED, HttpStatus.BAD_REQUEST);
+        }
+        String accessToken = this.jwtUtility.accessToken(userSessionEntity.getUser().getUsername());
+        String refreshToken = this.jwtUtility.refreshToken(userSessionEntity.getUser().getUsername());
+        userSessionEntity.setRefreshToken(refreshToken);
+        this.userSessionRepository.save(userSessionEntity);
+        RefreshTokenResponse refreshTokenResponse = new RefreshTokenResponse(accessToken, refreshToken);
+
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.REFRESH_TOKEN_GENERATED_SUCCESSFULLY, refreshTokenResponse));
     }
 }

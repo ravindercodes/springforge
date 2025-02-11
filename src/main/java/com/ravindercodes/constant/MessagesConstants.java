@@ -13,6 +13,11 @@ public class MessagesConstants {
     public static final String USER_DISABLED_VERIFICATION_EMAIL_SENT = "Your account has been disabled. A verification email has been sent to your registered email address.";
     public static final String RESET_PASSWORD_EMAIL_SENT = "Password reset link sent to your email.";
     public static final String RESET_PASSWORD_SUCCESSFULLY = "Your password has been reset successfully.";
+    public static final String FETCH_RECORD_SUCCESSFULLY = "Record fetch successfully!";
+    public static final String USER_LOGOUT_FROM_DEVICE = "Logout from device successfully!";
+    public static final String USER_LOGOUT_FROM_ALL_DEVICE = "Logout from all device successfully!";
+    public static final String REFRESH_TOKEN_GENERATED_SUCCESSFULLY = "Refresh token generated successfully!";
+    public static final String REFRESH_TOKEN_GENERATED_FAILED = "Refresh token generated failed";
 
     /**
      * In below constant is used for exception message

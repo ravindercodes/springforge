@@ -15,14 +15,18 @@ public class LoginResponse {
 
     private String username;
     private String email;
+    private String deviceId;
     private List<String> roles;
     private String type = "Bearer";
     private String accessToken;
+    private String refreshToken;
 
-    public LoginResponse(String username, String email, List<String> roles, String accessToken) {
+    public LoginResponse(String username, String email, String deviceId, List<String> roles, String accessToken, String refreshToken) {
         this.username = username;
         this.email = email;
+        this.deviceId = deviceId;
         this.roles = roles;
         this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
     }
 }
