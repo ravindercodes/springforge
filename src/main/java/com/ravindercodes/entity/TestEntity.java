@@ -1,6 +1,6 @@
 package com.ravindercodes.entity;
 
-import com.ravindercodes.entity.config.AuditableEntity;
+import com.ravindercodes.entity.config.DateAndAuditableEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "test")
-public class TestEntity extends AuditableEntity {
+public class TestEntity extends DateAndAuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
