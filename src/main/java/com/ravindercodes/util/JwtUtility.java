@@ -32,6 +32,9 @@ public class JwtUtility {
     @Value("${jwt.accessTokenExpireMs}")
     private int accessTokenExpireMs;
 
+    @Value("${jwt.refreshTokenExpireMs}")
+    private int refreshTokenExpireMs;
+
     @Value("${jwt.emailTokenExpireMs}")
     private int emailTokenExpireMs;
 
@@ -80,6 +83,9 @@ public class JwtUtility {
         return this.generateToken(subject, new Date(System.currentTimeMillis() + accessTokenExpireMs));
     }
 
+    public String refreshToken(String subject) {
+        return this.generateToken(subject, new Date(System.currentTimeMillis() + refreshTokenExpireMs));
+    }
 
     public String emailVerificationToken(String subject) {
         return this.generateToken(subject, new Date(System.currentTimeMillis() + emailTokenExpireMs));

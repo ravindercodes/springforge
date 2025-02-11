@@ -1,6 +1,7 @@
 package com.ravindercodes.controller;
 
 import com.ravindercodes.dto.request.LoginRequest;
+import com.ravindercodes.dto.request.RefreshTokenRequest;
 import com.ravindercodes.dto.request.ResetPasswordRequest;
 import com.ravindercodes.dto.request.SignupRequest;
 import com.ravindercodes.service.UserService;
@@ -55,5 +56,10 @@ public class UserController {
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
         return this.userService.resetPassword(resetPasswordRequest);
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return this.userService.getRefreshToken(refreshTokenRequest);
     }
 }
