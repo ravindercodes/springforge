@@ -10,23 +10,28 @@ base:
   frontend:
     url: http://localhost:8080/
 
+
 spring:
   # Devtools configurations
   devtools:
     restart:
-      enabled: false
+      enabled: true
     livereload:
-      enabled: false
+      enabled: true
   # H2 database configurations
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: ENC(z8hD0b+9epGXZIp0RZ0Fy8Cn1f8akJ6Q5sdQHlB0EuHwSKuqyEM8/p0kUBp38ieO)
+    password:
+    platform: h2
+    hikari:
+      minimum-idle: 1
+      maximum-pool-size: 10
   h2:
     console:
       enabled: true
       path: /h2-ui
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
   jpa:
     show-sql: true
     properties:
@@ -35,6 +40,34 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+  # Email configurations
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 587
+    username:
+    password:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope: profile, email
+          github:
+            client-id:
+            client-secret:
+            scope: profile, user:email
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+
+# "From" email configuration
+mail:
+  from: springforge@test.com
 
 # JWT configurations
 jwt:
@@ -42,7 +75,15 @@ jwt:
   emailTokenExpireMs: 120000
   refreshTokenExpireMs: 604800000
 
+
 # jasypt configurations
 jasypt:
   encryptor:
     password: "ravindercodes"
+
+
+
+
+
+
+

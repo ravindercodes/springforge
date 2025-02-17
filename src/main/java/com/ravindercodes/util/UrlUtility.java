@@ -21,8 +21,11 @@ public class UrlUtility {
     }
 
     public static String getResetPasswordUrl(String verificationToken) {
-        return frontendUrl + "api/auth/reset-password?verificationToken=" + verificationToken;
-        //return frontendUrl + "reset-password?token=" + token;
+        return frontendUrl + "reset-password?token=" + verificationToken;
+    }
+
+    public static String getDashboardUrl() {
+        return frontendUrl + "dashboard#user=";
     }
 
     @PostConstruct
