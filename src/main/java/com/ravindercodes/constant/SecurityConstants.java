@@ -6,11 +6,11 @@ public class SecurityConstants {
     public static final List<String> AUTH_WHITELIST = List.of(
             "/v3/api-docs/**",
             "/swagger-ui/**",
-            "/api/auth/**",
-            "/api/test/**",
+            "/api/v1/auth/**",
+            "/api/v1/test/**",
             "/h2-ui/**",
-            "/login/**",
-            "/api/home/**"
+            "/api/v1/login/**",
+            "/api/v1/home/**"
     );
 }
 
