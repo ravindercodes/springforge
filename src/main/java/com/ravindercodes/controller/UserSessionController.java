@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user-session")
+@RequestMapping("/api/v1/user-session")
 public class UserSessionController {
 
     @Autowired

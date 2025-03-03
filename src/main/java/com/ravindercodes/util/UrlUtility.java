@@ -17,7 +17,7 @@ public class UrlUtility {
     private String baseFrontendUrl;
 
     public static String getVerificationUrl(String verificationToken) {
-        return backendUrl + "api/auth/email-verification?verificationToken=" + verificationToken;
+        return backendUrl + "api/v1/auth/email-verification?verificationToken=" + verificationToken;
     }
 
     public static String getResetPasswordUrl(String verificationToken) {
