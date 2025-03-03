@@ -19,6 +19,7 @@ public class UserDetailsImpl implements UserDetails {
     private String username;
     private String email;
     private String password;
+    private String provider;
     private String verificationToken;
     private boolean deleted;
     private boolean isEnabled;
@@ -34,6 +35,7 @@ public class UserDetailsImpl implements UserDetails {
                 userEntity.getUsername(),
                 userEntity.getEmail(),
                 userEntity.getPassword(),
+                userEntity.getProvider(),
                 userEntity.getVerificationToken(),
                 userEntity.isDeleted(),
                 userEntity.isEnabled(),

@@ -44,14 +44,26 @@ spring:
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 587
-    username: aecc305723ab8c
-    password: 1e3354b3ba716d
-    properties:
+    username:
+    password:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope: profile, email
+          github:
+            client-id:
+            client-secret:
+            scope: profile, user:email
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
+
 
 # "From" email configuration
 mail:

@@ -1,5 +1,6 @@
 package com.ravindercodes.service.impl;
 
+import com.ravindercodes.constant.CommonConstants;
 import com.ravindercodes.constant.MessagesConstants;
 import com.ravindercodes.dto.model.EmailVerificationTokenModel;
 import com.ravindercodes.dto.model.ResetPasswordEmailModel;
@@ -138,6 +139,7 @@ public class UserServiceImpl implements UserService {
         String verificationToken = this.jwtUtility.emailVerificationToken(userEntity.getUsername());
         userEntity.setPassword(encoder.encode(signUpRequest.getPassword()));
         userEntity.setRoleEntities(roleEntities);
+        userEntity.setProvider(CommonConstants.SELF_PROVIDER);
         userEntity.setVerificationToken(verificationToken);
         userRepository.save(userEntity);
         emailUtility.sendEmailVerificationToken(

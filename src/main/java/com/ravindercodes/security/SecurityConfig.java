@@ -52,6 +52,11 @@ public class SecurityConfig {
     }
 
     @Bean
+    public OAuthSuccessHandler oAuth2SuccessHandler() {
+        return new OAuthSuccessHandler();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -59,7 +64,7 @@ public class SecurityConfig {
                         auth.requestMatchers(AUTH_WHITELIST).permitAll()
                                 .requestMatchers(new AntPathRequestMatcher("/h2-ui/**")).permitAll()
                                 .anyRequest().authenticated()
-                );
+                ).oauth2Login(auth -> auth.successHandler(oAuth2SuccessHandler()));
 
         http.headers(headers -> headers.frameOptions(frameOption -> frameOption.sameOrigin()));
 

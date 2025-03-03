@@ -38,6 +38,10 @@ public class UserEntity extends DateEntity {
     @Size(max = 120)
     private String password;
 
+    @NotBlank
+    @Size(max = 120)
+    private String provider;
+
     @Lob
     @Column
     private String verificationToken;
