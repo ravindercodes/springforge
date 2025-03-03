@@ -80,10 +80,3 @@ jwt:
 jasypt:
   encryptor:
     password: "ravindercodes"
-
-
-
-
-
-
-
