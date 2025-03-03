@@ -19,7 +19,7 @@ public class TestController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> save(@Valid @RequestBody TestRequest testRequest) {
+    public ResponseEntity<?> save(@Valid @RequestBody final TestRequest testRequest) {
         return this.testService.save(testRequest);
     }
 
