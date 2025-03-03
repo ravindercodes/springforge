@@ -10,7 +10,7 @@ public class SecurityConstants {
             "/api/test/**",
             "/h2-ui/**",
             "/login/**",
-            "/home/**"
+            "/api/home/**"
     );
 }
 
