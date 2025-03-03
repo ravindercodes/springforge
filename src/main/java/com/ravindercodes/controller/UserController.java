@@ -24,42 +24,42 @@ public class UserController {
     }
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody final LoginRequest loginRequest) {
         return this.userService.authenticateUser(loginRequest);
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody final SignupRequest signUpRequest) {
         return this.userService.registerUser(signUpRequest);
     }
 
     @GetMapping("/validate-token")
-    public ResponseEntity<?> validateToken(@RequestParam @NotBlank(message = "Token is required") String token) {
+    public ResponseEntity<?> validateToken(@RequestParam @NotBlank(message = "Token is required") final String token) {
         return this.userService.validateToken(token);
     }
 
     @GetMapping("/email-verification")
-    public ResponseEntity<?> emailVerification(@RequestParam @NotBlank(message = "Verification Token is required") String verificationToken) {
+    public ResponseEntity<?> emailVerification(@RequestParam @NotBlank(message = "Verification Token is required") final String verificationToken) {
         return this.userService.emailVerification(verificationToken);
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam @Email @NotBlank(message = "Email is required") String email) {
+    public ResponseEntity<?> forgotPassword(@RequestParam @Email @NotBlank(message = "Email is required") final String email) {
         return this.userService.forgetPassword(email);
     }
 
     @GetMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam @NotBlank(message = "Verification Token is required") String verificationToken) {
+    public ResponseEntity<?> resetPassword(@RequestParam @NotBlank(message = "Verification Token is required") final String verificationToken) {
         return this.userService.resetPassword(verificationToken);
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody final ResetPasswordRequest resetPasswordRequest) {
         return this.userService.resetPassword(resetPasswordRequest);
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> resetPassword(@Valid @RequestBody RefreshTokenRequest refreshTokenRequest) {
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody final RefreshTokenRequest refreshTokenRequest) {
         return this.userService.getRefreshToken(refreshTokenRequest);
     }
 }

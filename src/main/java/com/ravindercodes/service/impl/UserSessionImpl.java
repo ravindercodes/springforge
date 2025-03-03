@@ -36,7 +36,7 @@ public class UserSessionImpl implements UserSessionService {
     }
 
     @Override
-    public ResponseEntity<?> logoutFromDevice(String deviceId) {
+    public ResponseEntity<?> logoutFromDevice(final String deviceId) {
         UserSessionEntity session = this.userSessionRepository.findByDeviceId(deviceId).orElseThrow(() -> new ResourceNotFoundEx(MessagesConstants.RECORD_NOT_FOUND, HttpStatus.BAD_REQUEST));
         session.setActive(false);
         userSessionRepository.save(session);
@@ -44,7 +44,7 @@ public class UserSessionImpl implements UserSessionService {
     }
 
     @Override
-    public ResponseEntity<?> logoutFromAllDevice(long userId) {
+    public ResponseEntity<?> logoutFromAllDevice(final long userId) {
         List<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveTrue(userId);
         for (UserSessionEntity session : listUserSession) {
             session.setActive(false);
@@ -54,7 +54,7 @@ public class UserSessionImpl implements UserSessionService {
     }
 
     @Override
-    public ResponseEntity<?> getActiveSessions(long userId) {
+    public ResponseEntity<?> getActiveSessions(final long userId) {
         List<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveTrue(userId);
         List<UserSessionResponse> userSessionResponses = listUserSession.stream()
                 .map(session -> modelMapper.map(session, UserSessionResponse.class))
@@ -63,7 +63,7 @@ public class UserSessionImpl implements UserSessionService {
     }
 
     @Override
-    public ResponseEntity<?> getDisabledSessions(long userId) {
+    public ResponseEntity<?> getDisabledSessions(final long userId) {
         List<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveFalse(userId);
         List<UserSessionResponse> userSessionResponses = listUserSession.stream()
                 .map(session -> modelMapper.map(session, UserSessionResponse.class))

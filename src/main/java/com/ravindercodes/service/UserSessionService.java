@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface UserSessionService {
 
-    ResponseEntity<?> logoutFromDevice(String devideId);
+    ResponseEntity<?> logoutFromDevice(String deviceId);
 
     ResponseEntity<?> logoutFromAllDevice(long userId);
 

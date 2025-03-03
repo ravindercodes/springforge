@@ -92,8 +92,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
-        String ipAddress = IpAddressUtility.getClientIp(request);
+    public ResponseEntity<?> authenticateUser(final LoginRequest loginRequest) {
+        final String ipAddress = IpAddressUtility.getClientIp(request);
         if (loginAttemptService.isIpBlocked(ipAddress)) {
             long ipUnlockTime = loginAttemptService.getIpUnlockTime(ipAddress);
             throw new IpAddressBlockedEx(String.format(MessagesConstants.IP_ADDRESS_BLOCKED, ipUnlockTime), HttpStatus.FORBIDDEN);
@@ -122,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> registerUser(SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(final SignupRequest signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             throw new UsernameExitEx(MessagesConstants.USERNAME_ALREADY_EXIT, HttpStatus.CONFLICT);
         }
@@ -154,12 +154,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> validateToken(String token) {
+    public ResponseEntity<?> validateToken(final String token) {
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.TOKEN_VALIDATE_SUCCESSFULLY, this.jwtUtility.validateToken(token)));
     }
 
     @Override
-    public ResponseEntity<?> emailVerification(String verificationToken) {
+    public ResponseEntity<?> emailVerification(final String verificationToken) {
         Map<String, Object> tokenValidation = this.jwtUtility.validateToken(verificationToken);
         if (!(boolean) tokenValidation.get("valid")) {
             return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> forgetPassword(String email) {
+    public ResponseEntity<?> forgetPassword(final String email) {
         UserEntity userEntity = this.userRepository.findByEmail(email);
         if (userEntity == null) {
             throw new UserNotFoundEx(MessagesConstants.USER_NOT_FOUND, HttpStatus.BAD_REQUEST);
@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> resetPassword(String verificationToken) {
+    public ResponseEntity<?> resetPassword(final String verificationToken) {
         Map<String, Object> tokenValidation = this.jwtUtility.validateToken(verificationToken);
         if (!(boolean) tokenValidation.get("valid")) {
             return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
@@ -209,7 +209,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> resetPassword(ResetPasswordRequest resetPasswordRequest) {
+    public ResponseEntity<?> resetPassword(final ResetPasswordRequest resetPasswordRequest) {
         Map<String, Object> tokenValidation = this.jwtUtility.validateToken(resetPasswordRequest.getVerificationToken());
         if (!(boolean) tokenValidation.get("valid")) {
             return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.INVALID_TOKEN, tokenValidation));
@@ -225,7 +225,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> getRefreshToken(RefreshTokenRequest refreshTokenRequest) {
+    public ResponseEntity<?> getRefreshToken(final RefreshTokenRequest refreshTokenRequest) {
         UserSessionEntity userSessionEntity = this.userSessionRepository.findByDeviceId(refreshTokenRequest.getDeviceId()).orElseThrow(() -> new RuntimeException("Session not found"));
         Map<String, Object> tokenValidation = this.jwtUtility.validateToken(refreshTokenRequest.getRefreshToken());
         if (!(boolean) tokenValidation.get("valid")) {

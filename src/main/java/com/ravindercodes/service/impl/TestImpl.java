@@ -29,7 +29,7 @@ public class TestImpl implements TestService {
     }
 
     @Override
-    public ResponseEntity<?> save(TestRequest testRequest) {
+    public ResponseEntity<?> save(final TestRequest testRequest) {
         TestEntity testEntity = modelMapper.map(testRequest, TestEntity.class);
         TestEntity savedRecord = this.testRepository.save(testEntity);
         TestResponse response = modelMapper.map(savedRecord, TestResponse.class);

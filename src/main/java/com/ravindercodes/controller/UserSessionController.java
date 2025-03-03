@@ -18,22 +18,22 @@ public class UserSessionController {
     }
 
     @PostMapping("/logout-from-device")
-    public ResponseEntity<?> logoutFromDevice(@RequestParam @NotNull(message = "deviceId is required") String devideId) {
-        return this.userSessionService.logoutFromDevice(devideId);
+    public ResponseEntity<?> logoutFromDevice(@RequestParam @NotNull(message = "deviceId is required") final String deviceId) {
+        return this.userSessionService.logoutFromDevice(deviceId);
     }
 
     @PostMapping("/logout-from-all-device")
-    public ResponseEntity<?> logoutFromAllDevice(@RequestParam @NotNull(message = "UserId is required") long userId) {
+    public ResponseEntity<?> logoutFromAllDevice(@RequestParam @NotNull(message = "UserId is required") final long userId) {
         return this.userSessionService.logoutFromAllDevice(userId);
     }
 
     @GetMapping("/active-session")
-    public ResponseEntity<?> getActiveSessions(@RequestParam @NotNull(message = "UserId is required") long userId) {
+    public ResponseEntity<?> getActiveSessions(@RequestParam @NotNull(message = "UserId is required") final long userId) {
         return this.userSessionService.getActiveSessions(userId);
     }
 
     @GetMapping("/disabled-session")
-    public ResponseEntity<?> getDisabledSessions(@RequestParam @NotNull(message = "UserId is required") long userId) {
+    public ResponseEntity<?> getDisabledSessions(@RequestParam @NotNull(message = "UserId is required") final long userId) {
         return this.userSessionService.getDisabledSessions(userId);
     }
 }
