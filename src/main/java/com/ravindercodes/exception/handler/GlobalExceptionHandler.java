@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -215,6 +216,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> ipAddressBlockedEx(IpAddressBlockedEx ex, WebRequest request) {
         log.error("IP address block: {}", ex.getMessage());
         HttpStatus status = ex.getStatus();
+        return ResponseEntity.status(status.value())
+                .body(new ErrorResponse(
+                        Instant.now().getEpochSecond(),
+                        status.value(),
+                        status.getReasonPhrase(),
+                        ex.getClass().getName(),
+                        ex.getMessage(),
+                        request.getDescription(false).replace("uri=", "")
+                ));
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ErrorResponse> authorizationDeniedEx(AuthorizationDeniedException ex, WebRequest request) {
+        log.error("Access denied due to security restrictions: {}", ex.getMessage());
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         return ResponseEntity.status(status.value())
                 .body(new ErrorResponse(
                         Instant.now().getEpochSecond(),

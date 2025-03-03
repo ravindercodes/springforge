@@ -20,11 +20,13 @@ public class TestController {
     }
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> save(@Valid @RequestBody final TestRequest testRequest) {
         return this.testService.save(testRequest);
     }
 
     @GetMapping("/get-all-record")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<?> getAllRecord() {
         return this.testService.getAllRecord();
     }
