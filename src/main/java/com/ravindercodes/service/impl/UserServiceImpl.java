@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
                 EmailVerificationTokenModel.builder()
                         .toEmail(userEntity.getEmail())
                         .username(userEntity.getUsername())
-                        .subject(MessagesConstants.SUBJECT_VERFIFICATION_EMAIL)
+                        .subject(MessagesConstants.SUBJECT_VERIFICATION_EMAIL)
                         .verificationToken(verificationToken)
                         .build()
         );

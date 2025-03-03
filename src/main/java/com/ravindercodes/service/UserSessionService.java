@@ -8,8 +8,8 @@ public interface UserSessionService {
 
     ResponseEntity<?> logoutFromAllDevice(long userId);
 
-    ResponseEntity<?> getActiveSessions(long userId);
+    ResponseEntity<?> getActiveSessions(long userId, int page, int size, String sortBy, String sortDir);
 
-    ResponseEntity<?> getDisabledSessions(long userId);
+    ResponseEntity<?> getDisabledSessions(long userId, int page, int size, String sortBy, String sortDir);
 
 }

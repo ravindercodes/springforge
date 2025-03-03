@@ -36,7 +36,7 @@ public class MessagesConstants {
     /**
      * Email subject
      */
-    public static final String SUBJECT_VERFIFICATION_EMAIL = "Springforge email verification";
+    public static final String SUBJECT_VERIFICATION_EMAIL = "Springforge email verification";
     public static final String SUBJECT_RESET_PASSWORD = "Springforge reset password";
 
 

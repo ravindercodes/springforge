@@ -9,10 +9,12 @@ import com.ravindercodes.repository.TestRepository;
 import com.ravindercodes.service.TestService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class TestImpl implements TestService {
@@ -37,8 +39,11 @@ public class TestImpl implements TestService {
     }
 
     @Override
-    public ResponseEntity<?> getAllRecord() {
-        List<TestEntity> testList = this.testRepository.findAll();
-        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RECORD_SAVED, testList));
+    public ResponseEntity<?> getAllRecord(int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<TestEntity> testList = this.testRepository.findAll(pageable);
+        Page<TestResponse> testResponse = testList.map(entity -> new TestResponse(entity.getId(), entity.getName()));
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RECORD_SAVED, testResponse));
     }
 }
