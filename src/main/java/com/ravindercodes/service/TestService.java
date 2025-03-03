@@ -7,6 +7,6 @@ public interface TestService {
 
     public ResponseEntity<?> save(TestRequest testRequest);
 
-    public ResponseEntity<?> getAllRecord();
+    public ResponseEntity<?> getAllRecord(int page, int size, String sortBy, String sortDir);
 
 }

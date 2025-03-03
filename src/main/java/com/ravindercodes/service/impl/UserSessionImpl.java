@@ -10,6 +10,10 @@ import com.ravindercodes.repository.UserSessionRepository;
 import com.ravindercodes.service.UserSessionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,20 +58,20 @@ public class UserSessionImpl implements UserSessionService {
     }
 
     @Override
-    public ResponseEntity<?> getActiveSessions(final long userId) {
-        List<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveTrue(userId);
-        List<UserSessionResponse> userSessionResponses = listUserSession.stream()
-                .map(session -> modelMapper.map(session, UserSessionResponse.class))
-                .collect(Collectors.toList());
+    public ResponseEntity<?> getActiveSessions(final long userId, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveTrue(userId, pageable);
+        Page<UserSessionResponse> userSessionResponses = listUserSession.map(session -> modelMapper.map(session, UserSessionResponse.class));
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.FETCH_RECORD_SUCCESSFULLY, userSessionResponses));
     }
 
     @Override
-    public ResponseEntity<?> getDisabledSessions(final long userId) {
-        List<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveFalse(userId);
-        List<UserSessionResponse> userSessionResponses = listUserSession.stream()
-                .map(session -> modelMapper.map(session, UserSessionResponse.class))
-                .collect(Collectors.toList());
+    public ResponseEntity<?> getDisabledSessions(final long userId, int page, int size, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveFalse(userId, pageable);
+        Page<UserSessionResponse> userSessionResponses = listUserSession.map(session -> modelMapper.map(session, UserSessionResponse.class));
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.FETCH_RECORD_SUCCESSFULLY, userSessionResponses));
     }
 }

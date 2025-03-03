@@ -27,8 +27,11 @@ public class TestController {
 
     @GetMapping("/get-all-record")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<?> getAllRecord() {
-        return this.testService.getAllRecord();
+    public ResponseEntity<?> getAllRecord( @RequestParam(defaultValue = "0") final int page,
+                                           @RequestParam(defaultValue = "10") final int size,
+                                           @RequestParam(defaultValue = "id") final String sortBy,
+                                           @RequestParam(defaultValue = "asc") final String sortDir) {
+        return this.testService.getAllRecord(page, size, sortBy, sortDir);
     }
 
 }

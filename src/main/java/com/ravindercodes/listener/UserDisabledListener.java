@@ -42,7 +42,7 @@ public class UserDisabledListener {
                         EmailVerificationTokenModel.builder()
                                 .toEmail(user.getEmail())
                                 .username(user.getUsername())
-                                .subject(MessagesConstants.SUBJECT_VERFIFICATION_EMAIL)
+                                .subject(MessagesConstants.SUBJECT_VERIFICATION_EMAIL)
                                 .verificationToken(verificationToken)
                                 .build()
                 );
