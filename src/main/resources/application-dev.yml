@@ -64,6 +64,9 @@ spring:
           starttls:
             enable: true
 
+# Kafka configuration
+kafka:
+  bootstrap-servers: localhost:9092
 
 # "From" email configuration
 mail:

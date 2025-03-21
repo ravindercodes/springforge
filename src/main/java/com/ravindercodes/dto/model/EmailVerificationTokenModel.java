@@ -2,6 +2,8 @@ package com.ravindercodes.dto.model;
 
 import lombok.*;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -13,7 +15,5 @@ public class EmailVerificationTokenModel {
     private String subject;
     private String username;
     private String verificationToken;
-    private String[] ccEmails;
-    private String[] bccEmails;
 
 }
