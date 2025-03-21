@@ -15,6 +15,8 @@ import com.ravindercodes.entity.RoleEntity;
 import com.ravindercodes.entity.UserEntity;
 import com.ravindercodes.entity.UserSessionEntity;
 import com.ravindercodes.exception.custom.*;
+import com.ravindercodes.producer.EmailVerificationProducer;
+import com.ravindercodes.producer.ResetPasswordProducer;
 import com.ravindercodes.repository.RoleRepository;
 import com.ravindercodes.repository.UserRepository;
 import com.ravindercodes.repository.UserSessionRepository;
@@ -78,7 +80,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private final UserSessionRepository userSessionRepository;
 
-    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper, LoginAttemptService loginAttemptService, HttpServletRequest request, UserSessionRepository userSessionRepository) {
+    @Autowired
+    private final EmailVerificationProducer emailVerificationProducer;
+
+    @Autowired
+    private final ResetPasswordProducer resetPasswordProducer;
+
+    public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper, LoginAttemptService loginAttemptService, HttpServletRequest request, UserSessionRepository userSessionRepository, EmailVerificationProducer emailVerificationProducer, ResetPasswordProducer resetPasswordProducer) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
@@ -89,6 +97,8 @@ public class UserServiceImpl implements UserService {
         this.loginAttemptService = loginAttemptService;
         this.request = request;
         this.userSessionRepository = userSessionRepository;
+        this.emailVerificationProducer = emailVerificationProducer;
+        this.resetPasswordProducer = resetPasswordProducer;
     }
 
     @Override
@@ -142,13 +152,13 @@ public class UserServiceImpl implements UserService {
         userEntity.setProvider(CommonConstants.SELF_PROVIDER);
         userEntity.setVerificationToken(verificationToken);
         userRepository.save(userEntity);
-        emailUtility.sendEmailVerificationToken(
-                EmailVerificationTokenModel.builder()
-                        .toEmail(userEntity.getEmail())
-                        .username(userEntity.getUsername())
-                        .subject(MessagesConstants.SUBJECT_VERIFICATION_EMAIL)
-                        .verificationToken(verificationToken)
-                        .build()
+        emailVerificationProducer.sendVerificationToken(
+                 EmailVerificationTokenModel.builder()
+                .toEmail(userEntity.getEmail())
+                .username(userEntity.getUsername())
+                .subject(MessagesConstants.SUBJECT_VERIFICATION_EMAIL)
+                .verificationToken(verificationToken)
+                .build()
         );
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.VERIFICATION_EMAIL_SENT, null));
     }
@@ -183,7 +193,7 @@ public class UserServiceImpl implements UserService {
         String verificationToken = this.jwtUtility.emailVerificationToken(userEntity.getUsername());
         userEntity.setVerificationToken(verificationToken);
         this.userRepository.save(userEntity);
-        emailUtility.resetPassword(
+        resetPasswordProducer.resetPassword(
                 ResetPasswordEmailModel.builder()
                         .toEmail(userEntity.getEmail())
                         .username(userEntity.getUsername())

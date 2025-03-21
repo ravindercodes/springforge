@@ -27,23 +27,12 @@ public class EmailUtility {
     @Value("${mail.from}")
     private String fromEmail;
 
-    public boolean sendEmailVerificationToken(EmailVerificationTokenModel emailVerificationTokenModel) {
-
-        boolean isEmailSent = false;
-
+    public void sendEmailVerificationToken(EmailVerificationTokenModel emailVerificationTokenModel) {
         try {
             MimeMessageHelper helper = createEmailHelper();
 
             helper.setFrom(fromEmail);
             helper.setTo(emailVerificationTokenModel.getToEmail());
-
-            if (emailVerificationTokenModel.getCcEmails() != null && emailVerificationTokenModel.getCcEmails().length > 0) {
-                helper.setCc(emailVerificationTokenModel.getCcEmails());
-            }
-
-            if (emailVerificationTokenModel.getBccEmails() != null && emailVerificationTokenModel.getBccEmails().length > 0) {
-                helper.setBcc(emailVerificationTokenModel.getBccEmails());
-            }
 
             helper.setSubject(emailVerificationTokenModel.getSubject());
 
@@ -54,18 +43,12 @@ public class EmailUtility {
 
             helper.setText(htmlContent, true);
             mailSender.send(helper.getMimeMessage());
-            isEmailSent = true;
         } catch (MessagingException e) {
-            isEmailSent = false;
             throw new EmailSendFailedEx("Failed to send OTP email to " + emailVerificationTokenModel.getToEmail(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return isEmailSent;
     }
 
-    public boolean resetPassword(ResetPasswordEmailModel resetPasswordEmailModel) {
-
-        boolean isEmailSent = false;
-
+    public void resetPassword(ResetPasswordEmailModel resetPasswordEmailModel) {
         try {
             MimeMessageHelper helper = createEmailHelper();
 
@@ -81,12 +64,9 @@ public class EmailUtility {
 
             helper.setText(htmlContent, true);
             mailSender.send(helper.getMimeMessage());
-            isEmailSent = true;
         } catch (MessagingException e) {
-            isEmailSent = false;
             throw new EmailSendFailedEx("Failed to send password reset email to " + resetPasswordEmailModel.getToEmail(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return isEmailSent;
     }
 
     private MimeMessageHelper createEmailHelper() throws MessagingException {
