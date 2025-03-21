@@ -2,8 +2,6 @@ package com.ravindercodes.dto.model;
 
 import lombok.*;
 
-import java.util.List;
-
 @Setter
 @Getter
 @NoArgsConstructor

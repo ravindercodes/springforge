@@ -12,7 +12,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -28,21 +27,19 @@ import java.util.Map;
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final JwtUtility jwtUtility;
+    private final HttpServletRequest request;
+    private final UserSessionRepository userSessionRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
-    private JwtUtility jwtUtility;
-
-    @Autowired
-    private HttpServletRequest request;
-
-    @Autowired
-    private UserSessionRepository userSessionRepository;
+    public OAuthSuccessHandler(UserRepository userRepository, ModelMapper modelMapper, JwtUtility jwtUtility, HttpServletRequest request, UserSessionRepository userSessionRepository) {
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+        this.jwtUtility = jwtUtility;
+        this.request = request;
+        this.userSessionRepository = userSessionRepository;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

@@ -1,9 +1,14 @@
 package com.ravindercodes.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ravindercodes.constant.SecurityConstants;
 import com.ravindercodes.filter.AuthTokenFilter;
+import com.ravindercodes.repository.UserRepository;
+import com.ravindercodes.repository.UserSessionRepository;
 import com.ravindercodes.security.serviceimpl.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ravindercodes.util.JwtUtility;
+import jakarta.servlet.http.HttpServletRequest;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,12 +28,27 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
 
     private static final String[] AUTH_WHITELIST = SecurityConstants.AUTH_WHITELIST.toArray(new String[0]);
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
+    private final JwtUtility jwtUtility;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final ObjectMapper objectMapper;
+    private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
+    private final HttpServletRequest request;
+    private final UserSessionRepository userSessionRepository;
+
+    public SecurityConfig(JwtUtility jwtUtility, UserDetailsServiceImpl userDetailsService, ObjectMapper objectMapper, UserRepository userRepository, ModelMapper modelMapper, HttpServletRequest request, UserSessionRepository userSessionRepository) {
+        this.jwtUtility = jwtUtility;
+        this.userDetailsService = userDetailsService;
+        this.objectMapper = objectMapper;
+        this.userRepository = userRepository;
+        this.modelMapper = modelMapper;
+        this.request = request;
+        this.userSessionRepository = userSessionRepository;
+    }
 
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+        return new AuthTokenFilter(jwtUtility, userDetailsService, objectMapper);
     }
 
     @Bean
@@ -53,7 +73,7 @@ public class SecurityConfig {
 
     @Bean
     public OAuthSuccessHandler oAuth2SuccessHandler() {
-        return new OAuthSuccessHandler();
+        return new OAuthSuccessHandler(userRepository, modelMapper, jwtUtility, request, userSessionRepository);
     }
 
     @Bean

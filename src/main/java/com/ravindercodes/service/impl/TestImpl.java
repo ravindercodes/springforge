@@ -8,7 +8,6 @@ import com.ravindercodes.entity.TestEntity;
 import com.ravindercodes.repository.TestRepository;
 import com.ravindercodes.service.TestService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +18,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class TestImpl implements TestService {
 
-    @Autowired
     private final TestRepository testRepository;
-
-    @Autowired
     private final ModelMapper modelMapper;
 
     public TestImpl(TestRepository testRepository, ModelMapper modelMapper) {

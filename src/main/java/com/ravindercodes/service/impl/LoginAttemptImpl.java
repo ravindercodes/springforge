@@ -7,7 +7,6 @@ import com.ravindercodes.exception.custom.ResourceNotFoundEx;
 import com.ravindercodes.repository.LoginAttemptRepository;
 import com.ravindercodes.service.LoginAttemptService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +17,7 @@ import java.util.Optional;
 @Service
 public class LoginAttemptImpl implements LoginAttemptService {
 
-    @Autowired
     private final LoginAttemptRepository loginAttemptRepository;
-
-    @Autowired
     private final ModelMapper modelMapper;
 
     public LoginAttemptImpl(LoginAttemptRepository loginAttemptRepository, ModelMapper modelMapper) {

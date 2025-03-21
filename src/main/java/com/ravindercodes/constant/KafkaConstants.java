@@ -3,8 +3,8 @@ package com.ravindercodes.constant;
 public class KafkaConstants {
 
     /*
-    * Kafka topic
-    * */
+     * Kafka topic
+     * */
     public static final String EMAIL_VERIFICATION_TOPIC = "verification-email-topic";
     public static final String RESET_PASSWORD_EMAIL_TOPIC = "reset-password-email-topic";
 
