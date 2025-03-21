@@ -2,10 +2,8 @@ package com.ravindercodes.consumer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ravindercodes.constant.KafkaConstants;
-import com.ravindercodes.dto.model.EmailVerificationTokenModel;
 import com.ravindercodes.dto.model.ResetPasswordEmailModel;
 import com.ravindercodes.util.EmailUtility;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ResetPasswordConsumer {
 
-    @Autowired
     private final EmailUtility emailUtility;
 
     private final ObjectMapper objectMapper = new ObjectMapper();

@@ -8,7 +8,6 @@ import com.ravindercodes.repository.UserRepository;
 import com.ravindercodes.util.EmailUtility;
 import com.ravindercodes.util.JwtUtility;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.event.AuthenticationFailureDisabledEvent;
@@ -18,13 +17,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserDisabledListener {
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
     private EmailUtility emailUtility;
-
-    @Autowired
     private JwtUtility jwtUtility;
 
     @EventListener

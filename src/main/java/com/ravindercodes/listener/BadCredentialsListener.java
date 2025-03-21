@@ -5,7 +5,6 @@ import com.ravindercodes.entity.LoginAttemptEntity;
 import com.ravindercodes.service.LoginAttemptService;
 import com.ravindercodes.util.IpAddressUtility;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 @Component
 public class BadCredentialsListener {
 
-    @Autowired
     private final LoginAttemptService loginAttemptService;
 
     public BadCredentialsListener(LoginAttemptService loginAttemptService) {

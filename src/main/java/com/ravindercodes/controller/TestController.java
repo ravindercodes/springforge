@@ -3,7 +3,6 @@ package com.ravindercodes.controller;
 import com.ravindercodes.dto.request.TestRequest;
 import com.ravindercodes.service.TestService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/test")
 public class TestController {
 
-    @Autowired
     private final TestService testService;
 
     public TestController(TestService testService) {
@@ -27,10 +25,10 @@ public class TestController {
 
     @GetMapping("/get-all-record")
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    public ResponseEntity<?> getAllRecord( @RequestParam(defaultValue = "0") final int page,
-                                           @RequestParam(defaultValue = "10") final int size,
-                                           @RequestParam(defaultValue = "id") final String sortBy,
-                                           @RequestParam(defaultValue = "asc") final String sortDir) {
+    public ResponseEntity<?> getAllRecord(@RequestParam(defaultValue = "0") final int page,
+                                          @RequestParam(defaultValue = "10") final int size,
+                                          @RequestParam(defaultValue = "id") final String sortBy,
+                                          @RequestParam(defaultValue = "asc") final String sortDir) {
         return this.testService.getAllRecord(page, size, sortBy, sortDir);
     }
 

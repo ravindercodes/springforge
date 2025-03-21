@@ -31,7 +31,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -50,40 +49,17 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private final AuthenticationManager authenticationManager;
-
-    @Autowired
     private final UserRepository userRepository;
-
-    @Autowired
     private final RoleRepository roleRepository;
-
-    @Autowired
     private final PasswordEncoder encoder;
-
-    @Autowired
     private final JwtUtility jwtUtility;
-
-    @Autowired
     private final EmailUtility emailUtility;
-
-    @Autowired
     private final ModelMapper modelMapper;
-
-    @Autowired
     private final LoginAttemptService loginAttemptService;
-
-    @Autowired
     private final HttpServletRequest request;
-
-    @Autowired
     private final UserSessionRepository userSessionRepository;
-
-    @Autowired
     private final EmailVerificationProducer emailVerificationProducer;
-
-    @Autowired
     private final ResetPasswordProducer resetPasswordProducer;
 
     public UserServiceImpl(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder, JwtUtility jwtUtility, EmailUtility emailUtility, ModelMapper modelMapper, LoginAttemptService loginAttemptService, HttpServletRequest request, UserSessionRepository userSessionRepository, EmailVerificationProducer emailVerificationProducer, ResetPasswordProducer resetPasswordProducer) {
@@ -153,12 +129,12 @@ public class UserServiceImpl implements UserService {
         userEntity.setVerificationToken(verificationToken);
         userRepository.save(userEntity);
         emailVerificationProducer.sendVerificationToken(
-                 EmailVerificationTokenModel.builder()
-                .toEmail(userEntity.getEmail())
-                .username(userEntity.getUsername())
-                .subject(MessagesConstants.SUBJECT_VERIFICATION_EMAIL)
-                .verificationToken(verificationToken)
-                .build()
+                EmailVerificationTokenModel.builder()
+                        .toEmail(userEntity.getEmail())
+                        .username(userEntity.getUsername())
+                        .subject(MessagesConstants.SUBJECT_VERIFICATION_EMAIL)
+                        .verificationToken(verificationToken)
+                        .build()
         );
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.VERIFICATION_EMAIL_SENT, null));
     }

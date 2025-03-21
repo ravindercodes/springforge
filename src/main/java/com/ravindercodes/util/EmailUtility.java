@@ -6,7 +6,6 @@ import com.ravindercodes.dto.model.ResetPasswordEmailModel;
 import com.ravindercodes.exception.custom.EmailSendFailedEx;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,14 +17,16 @@ import org.thymeleaf.context.Context;
 @Component
 public class EmailUtility {
 
-    @Autowired
-    private JavaMailSender mailSender;
-
-    @Autowired
-    private TemplateEngine templateEngine;
+    private final JavaMailSender mailSender;
+    private final TemplateEngine templateEngine;
 
     @Value("${mail.from}")
     private String fromEmail;
+
+    public EmailUtility(JavaMailSender mailSender, TemplateEngine templateEngine) {
+        this.mailSender = mailSender;
+        this.templateEngine = templateEngine;
+    }
 
     public void sendEmailVerificationToken(EmailVerificationTokenModel emailVerificationTokenModel) {
         try {
