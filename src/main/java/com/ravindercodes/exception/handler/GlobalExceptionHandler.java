@@ -55,7 +55,6 @@ public class GlobalExceptionHandler {
                         status.value(),
                         status.getReasonPhrase(),
                         ex.getClass().getName(),
-                        "validation error",
                         errors,
                         request.getDescription(false).replace("uri=", "")
                 )

@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserSessionImpl implements UserSessionService {
@@ -55,8 +57,15 @@ public class UserSessionImpl implements UserSessionService {
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveTrue(userId, pageable);
-        Page<UserSessionResponse> userSessionResponses = listUserSession.map(session -> modelMapper.map(session, UserSessionResponse.class));
-        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.FETCH_RECORD_SUCCESSFULLY, userSessionResponses));
+        List<UserSessionResponse> userSessionResponses = listUserSession.map(session -> modelMapper.map(session, UserSessionResponse.class)).getContent();
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("totalPage", listUserSession.getTotalPages());
+        metadata.put("page", listUserSession.getNumber());
+        metadata.put("size", listUserSession.getSize());
+        metadata.put("total", listUserSession.getTotalElements());
+        metadata.put("sortBy", sortBy);
+        metadata.put("sortDir", sortDir);
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.FETCH_RECORD_SUCCESSFULLY, userSessionResponses, metadata));
     }
 
     @Override
@@ -64,7 +73,14 @@ public class UserSessionImpl implements UserSessionService {
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<UserSessionEntity> listUserSession = userSessionRepository.findByUserIdAndActiveFalse(userId, pageable);
-        Page<UserSessionResponse> userSessionResponses = listUserSession.map(session -> modelMapper.map(session, UserSessionResponse.class));
-        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.FETCH_RECORD_SUCCESSFULLY, userSessionResponses));
+        List<UserSessionResponse> userSessionResponses = listUserSession.map(session -> modelMapper.map(session, UserSessionResponse.class)).getContent();
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("totalPage", listUserSession.getTotalPages());
+        metadata.put("page", listUserSession.getNumber());
+        metadata.put("size", listUserSession.getSize());
+        metadata.put("total", listUserSession.getTotalElements());
+        metadata.put("sortBy", sortBy);
+        metadata.put("sortDir", sortDir);
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.FETCH_RECORD_SUCCESSFULLY, userSessionResponses, metadata));
     }
 }

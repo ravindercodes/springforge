@@ -15,6 +15,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class TestImpl implements TestService {
 
@@ -34,12 +38,21 @@ public class TestImpl implements TestService {
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RECORD_SAVED, response));
     }
 
-    @Override
+   @Override
     public ResponseEntity<?> getAllRecord(int page, int size, String sortBy, String sortDir) {
         Sort sort = sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<TestEntity> testList = this.testRepository.findAll(pageable);
-        Page<TestResponse> testResponse = testList.map(entity -> new TestResponse(entity.getId(), entity.getName()));
-        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RECORD_SAVED, testResponse));
+        List<TestResponse> testResponse = testList
+            .map(entity -> new TestResponse(entity.getId(), entity.getName()))
+            .getContent();
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("totalPage", testList.getTotalPages());
+        metadata.put("page", testList.getNumber());
+        metadata.put("size", testList.getSize());
+        metadata.put("total", testList.getTotalElements());
+        metadata.put("sortBy", sortBy);
+        metadata.put("sortDir", sortDir);
+        return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.RECORD_SAVED, testResponse, metadata));
     }
 }
