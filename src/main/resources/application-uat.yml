@@ -22,7 +22,7 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
-    username: ENC(z8hD0b+9epGXZIp0RZ0Fy8Cn1f8akJ6Q5sdQHlB0EuHwSKuqyEM8/p0kUBp38ieO)
+    username: ${DATABASE_USERNAME}
     password:
     platform: h2
     hikari:
@@ -44,19 +44,19 @@ spring:
   mail:
     host: sandbox.smtp.mailtrap.io
     port: 587
-    username:
-    password:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: profile, email
           github:
-            client-id:
-            client-secret:
+            client-id: ${GITHUB_CLIENT_ID}
+            client-secret: ${GITHUB_CLIENT_SECRET}
             scope: profile, user:email
       mail:
         smtp:
@@ -82,4 +82,4 @@ jwt:
 # jasypt configurations
 jasypt:
   encryptor:
-    password: "ravindercodes"
+    password: ${JASYPT_PASSWORD}
