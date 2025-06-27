@@ -13,10 +13,9 @@ public class ValidationResponse {
 
     private long timestamp;
     private int status;
-    private String error;
     private String exception;
     private String message;
-    private Map<String, String> fieldErrors;
+    private Map<String, String> error;
     private String path;
 
 }
