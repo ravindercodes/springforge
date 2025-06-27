@@ -152,7 +152,7 @@ public class UserServiceImpl implements UserService {
         }
         String username = this.jwtUtility.getUserNameFromJwtToken(verificationToken);
         UserEntity userEntity = this.userRepository.findByUsername(username);
-        if (userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != verificationToken) {
+        if (userEntity.getVerificationToken() == null || !userEntity.getVerificationToken().equals(verificationToken)) {
             throw new EmailVerificationFailedEx(MessagesConstants.EMAIL_VERIFICATION_FAILED, HttpStatus.BAD_REQUEST);
         }
         userEntity.setEnabled(true);
@@ -188,7 +188,7 @@ public class UserServiceImpl implements UserService {
         }
         String username = this.jwtUtility.getUserNameFromJwtToken(verificationToken);
         UserEntity userEntity = this.userRepository.findByUsername(username);
-        if (userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != verificationToken) {
+        if (userEntity.getVerificationToken() == null || !userEntity.getVerificationToken().equals(verificationToken)) {
             throw new ResetPasswordFailedEx(MessagesConstants.INVALID_RESET_TOKEN, HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(SuccessResponse.success(MessagesConstants.TOKEN_VALIDATE_SUCCESSFULLY, tokenValidation));
@@ -202,7 +202,7 @@ public class UserServiceImpl implements UserService {
         }
         String username = this.jwtUtility.getUserNameFromJwtToken(resetPasswordRequest.getVerificationToken());
         UserEntity userEntity = this.userRepository.findByUsername(username);
-        if (userEntity.getVerificationToken() == null && userEntity.getVerificationToken() != resetPasswordRequest.getVerificationToken()) {
+        if (userEntity.getVerificationToken() == null || !userEntity.getVerificationToken().equals(resetPasswordRequest.getVerificationToken())) {
             throw new ResetPasswordFailedEx(MessagesConstants.INVALID_RESET_TOKEN, HttpStatus.BAD_REQUEST);
         }
         userEntity.setPassword(encoder.encode(resetPasswordRequest.getPassword()));

@@ -5,10 +5,12 @@ import com.ravindercodes.exception.response.ErrorResponse;
 import com.ravindercodes.exception.response.ValidationResponse;
 import io.swagger.v3.oas.annotations.Hidden;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,7 +27,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> genericEx(Exception ex, WebRequest request) {
-        log.error("Unexpected error: {}", ex);
+        log.error("Unexpected error: {}", ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErrorResponse(
@@ -40,14 +42,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationResponse> handleValidationException(MethodArgumentNotValidException ex, WebRequest request) {
-        log.error("validation error: {}", ex.getMessage());
+        log.error("validation error: {}", ex.getMessage(), ex);
         HttpStatus status = HttpStatus.BAD_REQUEST;
         Map<String, String> errors = ex.getBindingResult().getFieldErrors()
                 .stream()
+                .filter(error -> error.getDefaultMessage() != null)
                 .collect(Collectors.toMap(
-                        error -> error.getField(),
-                        error -> error.getDefaultMessage(),
-                        (existing, replacement) -> existing
+                        FieldError::getField,
+                        DefaultMessageSourceResolvable::getDefaultMessage,
+                        (existing, replacement) -> replacement
                 ));
         return ResponseEntity.status(status).body(
                 new ValidationResponse(

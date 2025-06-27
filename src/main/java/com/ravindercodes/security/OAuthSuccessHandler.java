@@ -8,7 +8,6 @@ import com.ravindercodes.entity.UserSessionEntity;
 import com.ravindercodes.repository.UserRepository;
 import com.ravindercodes.repository.UserSessionRepository;
 import com.ravindercodes.util.*;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.modelmapper.ModelMapper;
@@ -20,8 +19,10 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Component
 public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
@@ -42,7 +43,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         OAuth2User oauthUser = (OAuth2User) authentication.getPrincipal();
 
         String provider = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
@@ -56,7 +57,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
         Map<String, Object> userDetails = extractUserDetails(loginResponse);
         String userJson = objectMapper.writeValueAsString(userDetails);
-        String redirectUrl = UrlUtility.getDashboardUrl() + URLEncoder.encode(userJson, "UTF-8");
+        String redirectUrl = UrlUtility.getDashboardUrl() + URLEncoder.encode(userJson, StandardCharsets.UTF_8);
 
         response.sendRedirect(redirectUrl);
     }
@@ -76,7 +77,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     public boolean userAlreadyExit(OAuth2User oauthUser, String provider) {
         if (CommonConstants.GITHUB_LOGIN.equals(provider)) {
-            return this.userRepository.existsByEmail(GitHubOAuthUtility.generateEmail(oauthUser.getAttribute("login")));
+            return this.userRepository.existsByEmail(GitHubOAuthUtility.generateEmail(Objects.requireNonNull(oauthUser.getAttribute("login"))));
         }
 
         if (CommonConstants.GOOGLE_LOGIN.equals(provider)) {
@@ -88,7 +89,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
 
     public LoginResponse getUser(OAuth2User oauthUser, String provider) {
         if (CommonConstants.GITHUB_LOGIN.equals(provider)) {
-            UserEntity user = this.userRepository.findByEmail(GitHubOAuthUtility.generateEmail(oauthUser.getAttribute("login")));
+            UserEntity user = this.userRepository.findByEmail(GitHubOAuthUtility.generateEmail(Objects.requireNonNull(oauthUser.getAttribute("login"))));
             UserSessionEntity userSession = this.saveUserSession(user);
             LoginResponse loginResponse = modelMapper.map(user, LoginResponse.class);
             loginResponse.setDeviceId(userSession.getDeviceId());
@@ -113,7 +114,7 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
         UserEntity userEntity = new UserEntity();
         if (CommonConstants.GITHUB_LOGIN.equals(provider)) {
             userEntity.setUsername(username);
-            userEntity.setEmail(GitHubOAuthUtility.generateEmail(oauthUser.getAttribute("login")));
+            userEntity.setEmail(GitHubOAuthUtility.generateEmail(Objects.requireNonNull(oauthUser.getAttribute("login"))));
             userEntity.setPassword(CommonConstants.GITHUB_LOGIN);
             userEntity.setProvider(provider);
             userEntity.setEnabled(true);
@@ -126,8 +127,6 @@ public class OAuthSuccessHandler implements AuthenticationSuccessHandler {
             userEntity.setProvider(provider);
             userEntity.setEnabled(true);
         }
-
-        String accessToken = jwtUtility.accessToken(username);
 
         UserEntity user = this.userRepository.save(userEntity);
         UserSessionEntity savedUserSession = this.saveUserSession(user);
